@@ -1,0 +1,317 @@
+// import {
+//     Box,
+//     Button,
+//     Text,
+//     Textarea,
+//     Heading,
+//   } from "@chakra-ui/react";
+//   import React from "react";
+//   import { io } from "socket.io-client";
+//   import { useEffect, useState } from "react";
+//   import axios from "axios";
+  
+//   const socket = io("http://localhost:5000");
+  
+//   const ProfileBox = () => {
+//     const [message, setMessage] = useState("");
+//     const [chat, setChat] = useState([]);
+//     const [myId, setMyId] = useState("");
+  
+  
+  
+//     useEffect(() => {
+//       socket.on("connect", () => {
+//         setMyId(socket.id);
+//       });
+  
+//       socket.on("receive_message", (data) => {
+//         setChat((prev) => [...prev, data]);
+//       });
+  
+//       return () => {
+//         socket.off("receive_message");
+//       };
+//     }, []);
+  
+//     const sendMessage = async(e) => {
+//       if(!message){
+//         alert("Please enter a message");
+//         return;
+//       }
+//       console.log("Message Sent");
+//       if (message.trim()) {
+//         socket.emit("send_message", {
+//           message: message,
+//           sender: socket.id,
+//         });
+//         setMessage("");
+//       }
+  
+//       try {
+//         const response = await axios.post("http://localhost:5000/send", {
+//           message,
+//           sender: socket.id,
+//         });
+//         console.log(response.data);
+//       } catch (error) {
+//         console.error("Error sending message:", error);
+//         if (error.response) {
+//           console.error("Response data:", error.response.data);
+//           console.error("Status:", error.response.status);
+//         }
+//       }
+//     };
+  
+    
+//     return (
+//       <>
+//         <Box p={4}>
+//             <Heading textAlign={"center"}>Message</Heading>
+//             {chat.map((msg, i) => (
+//               <Box
+//                 key={i}
+//                 style={{
+//                   textAlign: msg.sender === myId ? "right" : "left",
+//                   margin: "5px 0",
+//                 }}
+//               >
+//                 <Box
+//                   style={{
+//                     textAlign: msg.sender === myId ? "right" : "left",
+//                   }}
+//                 >
+//                   <Text
+//                     style={{
+//                       background: msg.sender === myId ? "#d1f7c4" : "#f1f1f1",
+//                       padding: "8px 12px",
+//                       borderRadius: "20px",
+//                       display: "inline-block",
+//                     }}
+//                   >
+//                     {msg.message}
+//                   </Text>
+//                 </Box>
+//               </Box>
+//             ))}
+//             <Textarea
+//               name="message"
+//               placeholder="Your Message"
+//               rows={6}
+//               resize="none"
+//               p={2}
+//               borderRadius="md"
+//               value={message}
+//               onChange={(e) => setMessage(e.target.value)}
+
+//             />
+  
+//           <Button
+//             colorScheme="blue"
+//             bg="blue.400"
+//             color="white"
+//             _hover={{
+//               bg: "blue.500",
+//             }}
+//             width="full"
+//             onClick={sendMessage}
+//           >
+//             Send Message
+//           </Button>
+//         </Box>
+//       </>
+//     );
+//   };
+  
+//   export default ProfileBox;
+  
+
+
+
+// src/ChatApp.jsx
+// import { useEffect, useState } from 'react';
+// import io from 'socket.io-client';
+// import axios from 'axios';
+
+// const socket = io('http://localhost:5000');
+
+// const  ProfileBox = () => {
+//   const [message, setMessage] = useState('');
+//   const [chat, setChat] = useState([]);
+
+//   const sendMessage = async () => {
+   
+//     const data = {
+//       message,
+//       sender: '6848e8ec5b5ea96a9ac21823',
+//       receiver: '684bd32bb37c5eb0d658dca6',
+//       conversation: '684bd32bb37c5eb0d658dca7',
+//     };
+    
+//     await axios.post('http://localhost:5000/api/messages/send', data);
+//     socket.emit('send_message', data);
+//     setMessage('');
+//   };
+
+//   useEffect(() => {
+//     socket.on('receive_message', (data) => {
+//       setChat((prev) => [...prev, data]);
+//     });
+
+//     return () => socket.off('receive_message');
+//   }, []);
+
+//   return (
+//     <div>
+//       <div>
+//         {chat.map((msg, index) => (
+//           <p key={index}><strong>{msg.sender}:</strong> {msg.message}</p>
+//         ))}
+//       </div>
+//       <input
+//         type="text"
+//         value={message}
+//         onChange={(e) => setMessage(e.target.value)}
+//       />
+//       <button onClick={sendMessage}>Send</button>
+//     </div>
+//   );
+// }
+
+// export default ProfileBox;
+
+
+
+
+  import { useEffect, useState } from 'react';
+  import io from 'socket.io-client';
+  import axios from 'axios';
+  import {
+    Box,
+    Input,
+    Button,
+    VStack,
+    Text,
+    HStack,
+  } from '@chakra-ui/react';
+
+  const socket = io('http://localhost:5000');
+
+  // Replace with real user & conversation from your auth/system
+  const currentUserId = '6848e8ec5b5ea96a9ac21823';
+  const receiverId = '684bd32bb37c5eb0d658dca6';
+  const conversationId = '684bd32bb37c5eb0d658dca7';
+
+  const ProfileBox = () => {
+    const [message, setMessage] = useState('');
+    const [chat, setChat] = useState([]);
+
+    useEffect(() => {
+      socket.emit('add_user', currentUserId);
+
+      return () => {
+        socket.off('receive_message');
+        socket.off('add_user');
+      };
+    }, [currentUserId]);
+
+    const sendMessage = async () => {
+      if (!message.trim()) return;
+
+      const data = {
+        message,
+        sender: currentUserId,
+        receiver: receiverId,
+        conversation: conversationId,
+      };
+
+      try {
+        const response = await axios.post('http://localhost:5000/api/messages/send', data);
+        socket.emit('send_message', response.data.newMessage);
+        setChat((prev) => [...prev, response.data.newMessage]);
+        setMessage('');
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
+    };
+
+    useEffect(() => {
+      const fetchMessages = async () => {
+        try {
+          const res = await axios.get(`http://localhost:5000/api/messages/${conversationId}`);
+          setChat(res.data);
+        } catch (error) {
+          console.error('Error loading messages:', error);
+        }
+      };
+
+      fetchMessages();
+
+      const handleNewMessage = (newMessage) => {
+        console.log('New message received:', newMessage);
+        setChat(prevChat => {
+          const messageExists = prevChat.some(msg => 
+            msg._id === newMessage._id || 
+            (msg.sender._id === newMessage.sender._id && 
+             msg.message === newMessage.message && 
+             Math.abs(new Date(msg.createdAt) - new Date(newMessage.createdAt)) < 1000)
+          );
+          
+          if (!messageExists) {
+            return [...prevChat, newMessage];
+          }
+          return prevChat;
+        });
+      };
+
+      socket.on('receive_message', handleNewMessage);
+
+      return () => {
+        socket.off('receive_message', handleNewMessage);
+      };
+    }, []);
+
+    return (
+      <Box w="100%" maxW="500px" mx="auto" p={4} borderWidth="1px" borderRadius="lg">
+        <VStack spacing={4} align="stretch">
+          <Box
+            maxH="400px"
+            overflowY="auto"
+            p={2}
+            border="1px solid"
+            borderColor="gray.200"
+            borderRadius="md"
+          >
+            {chat.map((msg, index) => (
+              <HStack key={index} justify={msg.sender._id === currentUserId ? 'flex-end' : 'flex-start'}>
+                <Box
+                  bg={msg.sender._id === currentUserId ? 'blue.100' : 'green.100'}
+                  color="black"
+                  px={3}
+                  py={2}
+                  borderRadius="lg"
+                  maxW="70%"
+                >
+                  <Text fontSize="sm">
+                    <strong>{msg.sender._id === currentUserId ? 'You' : msg.sender.name || 'Friend'}</strong>: {msg.message}
+                  </Text>
+                </Box>
+              </HStack>
+            ))}
+          </Box>
+
+          <HStack>
+            <Input
+              placeholder="Type your message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <Button colorScheme="teal" onClick={sendMessage}>
+              Send
+            </Button>
+          </HStack>
+        </VStack>
+      </Box>
+    );
+  };
+
+  export default ProfileBox;

@@ -7,8 +7,8 @@ const sendMessage = async (req, res) => {
     const { sender, message, receiver, conversation } = req.body;
     const newMessage = await Message.create({ sender, message, receiver, conversation });
     
-    await newMessage.populate('sender', 'name avatar');
-    
+    await newMessage.populate('sender','name _id',);
+    // await newMessage.save();
     res.status(201).json({ message: "Message sent successfully", newMessage });
   } catch (error) {
     console.error('Error sending message:', error);
@@ -25,7 +25,7 @@ const getMessages = async (req, res) => {
     }
     
     const messages = await Message.find({ conversation: conversationId })
-      .populate('sender', 'name avatar')
+      .populate('sender','name _id',)
       .sort({ createdAt: 1 });
     
     res.status(200).json(messages);
@@ -35,9 +35,36 @@ const getMessages = async (req, res) => {
   }
 };
 
+const getConversationId = async (req, res) => {
+  try {
+    const { currentUserId, receiverId } = req.body;
+    
+    // Find or create conversation
+    let conversation = await Conversation.findOne({
+      members: { $all: [currentUserId, receiverId] },
+    });
+    
+    if (!conversation) {
+      // Create new conversation if it doesn't exist
+      conversation = await Conversation.create({
+        members: [currentUserId, receiverId],
+      });
+    }
+    
+    res.status(200).json({ 
+      conversationId: conversation._id,
+      members: conversation.members
+    });
+  } catch (error) {
+    console.error('Error in getConversationId:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   sendMessage,
-  getMessages
+  getMessages,
+  getConversationId
 };
 
 

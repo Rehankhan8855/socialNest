@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const User = require('./users');
-const Message = require('./Message');
 
 const conversationSchema = new mongoose.Schema({
   participants: [{
@@ -8,11 +7,6 @@ const conversationSchema = new mongoose.Schema({
     ref: User,
   }],
   
-  messages:[{
-    type: mongoose.Schema.Types.ObjectId,
-    ref:Message,
-    default:[],
-  }],
  
 },
 {

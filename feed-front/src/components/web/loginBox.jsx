@@ -3,7 +3,7 @@
 import { Box, Button, Field, Heading, Input, Link, Stack, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import { useNavigate } from "react-router-dom";
 
@@ -18,6 +18,13 @@ export const LoginBox = () => {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      navigate("/feed");
+    }
+  }, []);
 
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
@@ -37,6 +44,8 @@ export const LoginBox = () => {
     }
   });
   console.log(err);
+
+  
   return (
     <Box  maxW="md" mx="auto" mt={20} p={8} borderWidth={1} borderRadius={8} boxShadow="lg">
     <form onSubmit={onSubmit}>

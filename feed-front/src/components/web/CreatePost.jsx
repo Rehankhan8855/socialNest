@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 export const CreatePost = ({ onPostCreated }) => {
+  
   const [content, setContent] = useState('');
   const [isPosting, setIsPosting] = useState(false);
   const user = useSelector((state) => state.user.user);
@@ -22,13 +23,13 @@ export const CreatePost = ({ onPostCreated }) => {
     setIsPosting(true);
     try {
       const response = await axios.post('http://localhost:5000/api/posts/create-post', {
-        userId: user?.user?._id,
+        userId: user?._id,
         description: content,
       });
       
       setContent('');
       if (onPostCreated) {
-        onPostCreated(response.data);
+        onPostCreated(response.data.newPost);
       }
     } catch (error) {
       console.error('Error creating post:', error);
@@ -42,8 +43,8 @@ export const CreatePost = ({ onPostCreated }) => {
       <Card.Body p={4}>
         <Flex gap={3}>
           <Avatar.Root size="md">
-            <Avatar.Fallback name={user?.user?.name || 'User'} />
-            {user?.user?.profilePicture && <Avatar.Image src={user.user.profilePicture} />}
+            <Avatar.Fallback name={user?.name || 'User'} />
+            {user?.profilePicture && <Avatar.Image src={user?.profilePicture} />}
           </Avatar.Root>
           
           <Box width="full">

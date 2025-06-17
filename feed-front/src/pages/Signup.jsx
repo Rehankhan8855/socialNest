@@ -54,6 +54,7 @@ export const Signup = () => {
     // Simulate successful signup
   };
 
+  
   return (
     <Box
       maxW="md"

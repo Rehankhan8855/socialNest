@@ -59,7 +59,7 @@ export const NavBar = () => {
     setShowDropdown(false);
   };
 
-  console.log(user)
+  // console.log(user)
   return (
     <>
       <Box

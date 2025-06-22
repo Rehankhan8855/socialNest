@@ -4,8 +4,12 @@ const mongoose = require("mongoose");
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(
-      "mongodb+srv://rehankhan27587:8g9g9g9g@cluster0.fr6ldhc.mongodb.net/",
-      {}
+      "mongodb+srv://rehankhan:yoA9KUxERvt4Pc08@cluster0.r4bkqma.mongodb.net/",
+      // yoA9KUxERvt4Pc08
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
     );
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {

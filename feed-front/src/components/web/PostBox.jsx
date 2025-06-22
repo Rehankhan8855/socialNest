@@ -10,7 +10,7 @@ export const PostBox = ({ userId, content, createdAt, postId }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const [likeCount, setLikeCount] = useState(0);
   const [liked, setLiked] = useState(false);
 
   const formattedDate = createdAt
@@ -22,7 +22,7 @@ export const PostBox = ({ userId, content, createdAt, postId }) => {
       setLoading(true);
       setError(null);
       axios
-        .get(`http://localhost:5000/api/user/get-user/${userId}`)
+        .get(`http://localhost:5000/api/user/get-user/${userId}`) // This is actually correct - the route is /api/user/get-user/:id
         .then((response) => {
           setUser(response.data.user);
           setLoading(false);
@@ -35,20 +35,51 @@ export const PostBox = ({ userId, content, createdAt, postId }) => {
     }
   }, [userId]);
 
-  const handleLikeToggle = () => {
-    setLiked((prev) => !prev);
-  };
+  // const handleLikeToggle = () => {
+  //   setLiked((prev) => !prev);
+  // };
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/posts/delete-post/${postId}`);
+      await axios.delete(
+        `http://localhost:5000/api/posts/delete-post/${postId}`
+      );
       alert("Post deleted!");
-      window.location.reload(); 
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting post:", error);
     }
   };
-  
+  const handleLikeToggle = async () => {
+    try {
+      await axios.put(`http://localhost:5000/api/posts/like/${postId}`, {
+        userId: currentUser._id,
+      });
+      setLiked((prev) => !prev);
+      setLikeCount(res.data.likes.length);
+    } catch (err) {
+      console.error("Error toggling like", err);
+    }
+  };
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/posts/${postId}`
+        );
+        if (res.data.likes.includes(currentUser._id)) {
+          setLiked(true);
+        }
+        setLikeCount(res.data.likes.length);
+      } catch (err) {
+        console.log("Error fetching post like status", err);
+      }
+    };
+    if (postId && currentUser?._id) {
+      fetchPost();
+    }
+  }, [postId, currentUser]);
 
   return (
     <Card.Root width="full" mb={2} borderBottomWidth="1px">
@@ -76,26 +107,33 @@ export const PostBox = ({ userId, content, createdAt, postId }) => {
         </Card.Description>
       </Card.Body>
       <Card.Footer justifyContent="flex-end">
+        <Text fontSize="sm" color="gray.600" px={2} fontStyle="italic" gap={2} mr={2}>
+          {likeCount}{" "}
+          {likeCount === 1 ? "person likes this" : "people like this"}
+        </Text>
+
         <Button
           variant="ghost"
           size="sm"
           onClick={handleLikeToggle}
           color={liked ? "red.400" : "gray.500"}
-        >
+          gap={2}
+          >
           {liked ? "❤️ Liked" : "🤍 Like"}
         </Button>
-        {/* <Button variant="ghost" size="sm">
-          💬Comment
-        </Button>
-        <Button variant="ghost" size="sm">
-          📤Share
-        </Button> */}
+
         {currentUser?._id === userId && (
           <Button
             variant="ghost"
             size="sm"
             colorScheme="red"
             onClick={handleDelete}
+            gap={2}
+            _hover={{
+              color: "red.600",
+              cursor: "pointer",
+              transition: "all 0.2s ease-in-out",
+            }}
           >
             🗑️ Delete
           </Button>

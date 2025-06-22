@@ -2,12 +2,29 @@ const Message = require("../model/Message");
 const Conversation = require("../model/Conversation");
 
 const sendMessage = async (req, res) => {
-  console.log("Message Received:", req.body);
+  // console.log("Message Received:", req.body);
   try {
     const { sender, message, receiver, conversation } = req.body;
-    const newMessage = await Message.create({ sender, message, receiver, conversation });
+
+    if (!sender || !receiver || !message || !conversation) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    console.log("Message Received:", sender, message, receiver, conversation);
+    const newMessage = await Message.create({
+      sender,
+      message,
+      receiver,
+      conversation,
+    });
     
-    await newMessage.populate('sender','name _id',);
+    // Yeh incorrect hai (await se populate hota nahi):
+    // await newMessage.populate('sender','name _id');
+    
+    await newMessage.populate({
+      path: "sender",
+      select: "name _id",
+    });
     // await newMessage.save();
     
     res.status(201).json({ message: "Message sent successfully", newMessage });

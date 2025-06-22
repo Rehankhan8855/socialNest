@@ -67,12 +67,16 @@ const ProfileBox = () => {
         data
       );
       socket.emit("send_message", response.data.newMessage);
+      console.log("Message sent response:", response.data);
       setChat((prev) => [...prev, response.data.newMessage]);
       setMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
     }
+
   };
+
+
 
   const handleNewMessage = useCallback((newMessage) => {
     console.log("New message received:", newMessage);
@@ -115,62 +119,77 @@ const ProfileBox = () => {
 
   return (
     <Box
-      w="100%"
-      maxW="500px"
-      mx="auto"
-      p={4}
-      borderWidth="1px"
-      borderRadius="lg"
-    >
-      <VStack spacing={4} align="stretch">
-        <Box
-          maxH="400px"
-          overflowY="auto"
-          p={2}
-          border="1px solid"
-          borderColor="gray.200"
-          borderRadius="md"
-        >
-          {chat.map((msg, index) => (
-            <HStack
-              key={index}
-              justify={
-                msg.sender._id === currentUserId ? "flex-end" : "flex-start"
+    w="100%"
+    maxW={['100%', '90%', '600px']}
+    mx="auto"
+    mt={6}
+    p={4}
+    bg={('white', 'gray.800')}
+    boxShadow="xl"
+    borderRadius="lg"
+    borderWidth="1px"
+  >
+    <VStack spacing={4} align="stretch">
+      <Box
+        h="60vh"
+        maxH="60vh"
+        overflowY="auto"
+        p={4}
+        bg={('gray.50', 'gray.700')}
+        borderRadius="md"
+      >
+        {chat.map((msg, index) => (
+          <HStack
+            key={index}
+            justify={
+              msg.sender._id === currentUserId ? 'flex-end' : 'flex-start'
+            }
+            mb={2}
+          >
+            <Box
+              bg={
+                msg.sender._id === currentUserId ? 'blue.400' : 'gray.100'
               }
+              color={msg.sender._id === currentUserId ? 'white' : 'black'}
+              px={4}
+              py={2}
+              borderRadius="xl"
+              maxW="70%"
+              boxShadow="md"
             >
-              <Box
-                bg={msg.sender._id === currentUserId ? "blue.100" : "green.100"}
-                color="black"
-                px={3}
-                py={2}
-                borderRadius="lg"
-                maxW="70%"
-              >
-                <Text fontSize="sm">
-                  <strong>
-                    {msg.sender._id === currentUserId
-                      ? "You"
-                      : msg.sender.name || "Friend"}
-                  </strong>
-                  : {msg.message}
-                </Text>
-              </Box>
-            </HStack>
-          ))}
-        </Box>
+              <Text fontSize="sm">
+                <strong>
+                  {msg.sender._id === currentUserId
+                    ? 'You'
+                    : msg.sender.name || 'Friend'}
+                </strong>
+                : {msg.message}
+              </Text>
+            </Box>
+          </HStack>
+        ))}
+      </Box>
 
-        <HStack>
-          <Input
-            placeholder="Type your message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <Button colorScheme="teal" onClick={sendMessage}>
-            Send
-          </Button>
-        </HStack>
-      </VStack>
-    </Box>
+      <HStack>
+        <Input
+          placeholder="Type your message..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          borderRadius="full"
+          bg={('white', 'blackAlpha.100')}
+          _focus={{ bg: 'white' }}
+        />
+        <Button
+          colorScheme="teal"
+          borderRadius="full"
+          px={6}
+          onClick={sendMessage}
+        >
+          Send
+        </Button>
+      </HStack>
+    </VStack>
+  </Box>
   );
 };
 

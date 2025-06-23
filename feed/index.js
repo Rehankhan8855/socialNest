@@ -24,10 +24,11 @@ app.use("/api/messages", messageRoutes);
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // frontend ka port
+    origin:["http://localhost:5173", "https://social-nest-nu.vercel.app/"], // frontend ka port
     methods: ["GET", "POST"],
   },
 });
+
 
 const onlineUsers = new Map();
 

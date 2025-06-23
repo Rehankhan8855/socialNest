@@ -22,7 +22,7 @@ export const PostBox = ({ userId, content, createdAt, postId }) => {
       setLoading(true);
       setError(null);
       axios
-        .get(`http://localhost:5000/api/user/get-user/${userId}`) // This is actually correct - the route is /api/user/get-user/:id
+        .get(`${process.env.API_URL}/api/user/get-user/${userId}`) // This is actually correct - the route is /api/user/get-user/:id
         .then((response) => {
           setUser(response.data.user);
           setLoading(false);
@@ -42,7 +42,7 @@ export const PostBox = ({ userId, content, createdAt, postId }) => {
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/posts/delete-post/${postId}`
+        `${process.env.API_URL}/api/posts/delete-post/${postId}`
       );
       alert("Post deleted!");
       window.location.reload();
@@ -52,7 +52,7 @@ export const PostBox = ({ userId, content, createdAt, postId }) => {
   };
   const handleLikeToggle = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/posts/like/${postId}`, {
+      await axios.put(`${process.env.API_URL}/api/posts/like/${postId}`, {
         userId: currentUser._id,
       });
       setLiked((prev) => !prev);
@@ -66,7 +66,7 @@ export const PostBox = ({ userId, content, createdAt, postId }) => {
     const fetchPost = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/posts/${postId}`
+          `${process.env.API_URL}/api/posts/${postId}`
         );
         if (res.data.likes.includes(currentUser._id)) {
           setLiked(true);

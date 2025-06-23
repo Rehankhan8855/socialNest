@@ -22,7 +22,7 @@ export const CreatePost = ({ onPostCreated }) => {
     
     setIsPosting(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/posts/create-post', {
+      const response = await axios.post(`${process.env.API_URL}/api/posts/create-post`, {
         userId: user?._id,
         description: content,
       });

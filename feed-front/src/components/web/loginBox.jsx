@@ -30,7 +30,7 @@ export const LoginBox = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/login", data);
+      const response = await axios.post(`${process.env.API_URL}/login`, data);
       // Store both user data and token in localStorage
       localStorage.setItem("user", JSON.stringify(response.data.user));
       localStorage.setItem("token", response.data.token);

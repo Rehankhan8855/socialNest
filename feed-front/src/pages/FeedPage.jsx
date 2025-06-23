@@ -18,7 +18,7 @@ export default function FeedPage() {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/posts/get-all-posts"
+        `${process.env.API_URL}/api/posts/get-all-posts`
       );
       console.log(response.data);
       setPosts(response.data);

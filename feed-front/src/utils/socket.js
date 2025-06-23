@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 
 // Create a socket connection
-const socket = io('http://localhost:5000', {
+const socket = io(`${process.env.API_URL}`, {
   withCredentials: true,
   autoConnect: true,
   reconnection: true,

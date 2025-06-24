@@ -21,11 +21,14 @@ export const LoginBox = () => {
 
   useEffect(() => {
     const user = localStorage.getItem("user");
-    if (user) {
+    if (!user) return;
+    
+    // optionally wait a tick before navigating
+    setTimeout(() => {
       navigate("/feed");
-    }
+    }, 100);
   }, []);
-
+  
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
 
@@ -34,8 +37,10 @@ export const LoginBox = () => {
       // Store both user data and token in localStorage
       localStorage.setItem("user", JSON.stringify(response.data.user));
       localStorage.setItem("token", response.data.token);
-      setLoading(false);
-      navigate('/feed');
+      setTimeout(() => {
+        setLoading(false);
+        navigate('/feed', { replace: true });
+      }, 300);
     } catch (error) {
       console.error('Login error:', error);
       const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
@@ -44,6 +49,8 @@ export const LoginBox = () => {
     }
   });
   console.log(err);
+
+
 
   
   return (
@@ -69,7 +76,7 @@ export const LoginBox = () => {
           </Text>
         )}
 
-        <Button type="submit" loading={loading} alignSelf="center">
+        <Button type="submit" isLoading={loading} alignSelf="center">
           Login
         </Button>
         <Text alignSelf="center">

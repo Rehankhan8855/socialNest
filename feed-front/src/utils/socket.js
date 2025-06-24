@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 
 // Create a socket connection
-const socket = io(`${process.env.API_URL}`, {
+const socket = io(`${import.meta.env.VITE_API_URL}`, {
   withCredentials: true,
   autoConnect: true,
   reconnection: true,

@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import axios from "axios";
 import { Box, Input, Button, VStack, Text, HStack } from "@chakra-ui/react";
 
-const socket = io(`${process.env.API_URL}`, {
+const socket = io(`${import.meta.env.VITE_API_URL}`, {
   transports: ["websocket"], // force websocket transport
 });
 
@@ -17,7 +17,7 @@ const ProfileBox = () => {
   async function getConversationId() {
     try {
       const response = await axios.post(
-        `${process.env.API_URL}/api/messages/get-conversation-id`,
+        `${import.meta.env.VITE_API_URL}/api/messages/get-conversation-id`,
         {
           currentUserId,
           receiverId,
@@ -63,7 +63,7 @@ const ProfileBox = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.API_URL}/api/messages/send`,
+        `${import.meta.env.VITE_API_URL}/api/messages/send`,
         data
       );
       socket.emit("send_message", response.data.newMessage);
@@ -100,7 +100,7 @@ const ProfileBox = () => {
 
       try {
         const res = await axios.get(
-          `${process.env.API_URL}/api/messages/get-all-messages/${conversationId}`
+          `${import.meta.env.VITE_API_URL}/api/messages/get-all-messages/${conversationId}`
         );
         setChat(res.data);
       } catch (error) {

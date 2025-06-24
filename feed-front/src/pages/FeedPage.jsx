@@ -18,7 +18,7 @@ export default function FeedPage() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${process.env.API_URL}/api/posts/get-all-posts`
+        `${import.meta.env.VITE_API_URL}/api/posts/get-all-posts`
       );
       console.log(response.data);
       setPosts(response.data);

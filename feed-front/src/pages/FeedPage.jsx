@@ -52,6 +52,10 @@ export default function FeedPage() {
   };
   console.log("Rendering posts:", posts);
 
+  const handlePostDeleted = (postId) => {
+    setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+  };
+
   return (
     <>
       <NavBar />
@@ -90,6 +94,7 @@ export default function FeedPage() {
                       content={post.description}
                       createdAt={post.createdAt}
                       key={post._id || `${post.userId}-${index}`}
+                      onPostDeleted={handlePostDeleted}
                     />
                   )
               )

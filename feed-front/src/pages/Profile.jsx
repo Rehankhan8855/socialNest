@@ -73,10 +73,7 @@ const ProfileBox = () => {
     } catch (error) {
       console.error("Error sending message:", error);
     }
-
   };
-
-
 
   const handleNewMessage = useCallback((newMessage) => {
     console.log("New message received:", newMessage);
@@ -100,7 +97,9 @@ const ProfileBox = () => {
 
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/messages/get-all-messages/${conversationId}`
+          `${
+            import.meta.env.VITE_API_URL
+          }/api/messages/get-all-messages/${conversationId}`
         );
         setChat(res.data);
       } catch (error) {
@@ -119,77 +118,75 @@ const ProfileBox = () => {
 
   return (
     <Box
-    w="100%"
-    maxW={['100%', '90%', '600px']}
-    mx="auto"
-    mt={6}
-    p={4}
-    bg={('white', 'gray.800')}
-    boxShadow="xl"
-    borderRadius="lg"
-    borderWidth="1px"
-  >
-    <VStack spacing={4} align="stretch">
-      <Box
-        h="60vh"
-        maxH="60vh"
-        overflowY="auto"
-        p={4}
-        bg={('gray.50', 'gray.700')}
-        borderRadius="md"
-      >
-        {chat.map((msg, index) => (
-          <HStack
-            key={index}
-            justify={
-              msg.sender._id === currentUserId ? 'flex-end' : 'flex-start'
-            }
-            mb={2}
-          >
-            <Box
-              bg={
-                msg.sender._id === currentUserId ? 'blue.400' : 'gray.100'
-              }
-              color={msg.sender._id === currentUserId ? 'white' : 'black'}
-              px={4}
-              py={2}
-              borderRadius="xl"
-              maxW="70%"
-              boxShadow="md"
-            >
-              <Text fontSize="sm">
-                <strong>
-                  {msg.sender._id === currentUserId
-                    ? 'You'
-                    : msg.sender.name || 'Friend'}
-                </strong>
-                : {msg.message}
-              </Text>
-            </Box>
-          </HStack>
-        ))}
-      </Box>
-
-      <HStack>
-        <Input
-          placeholder="Type your message..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          borderRadius="full"
-          bg={('white', 'blackAlpha.100')}
-          _focus={{ bg: 'white' }}
-        />
-        <Button
-          colorScheme="teal"
-          borderRadius="full"
-          px={6}
-          onClick={sendMessage}
+      w="100%"
+      maxW={["100%", "90%", "600px"]}
+      mx="auto"
+      mt={6}
+      p={4}
+      bg={("white", "gray.800")}
+      boxShadow="xl"
+      borderRadius="lg"
+      borderWidth="1px"
+    >
+      <VStack spacing={4} align="stretch">
+        <Box
+          h="60vh"
+          maxH="60vh"
+          overflowY="auto"
+          p={4}
+          bg={("gray.50", "gray.700")}
+          borderRadius="md"
         >
-          Send
-        </Button>
-      </HStack>
-    </VStack>
-  </Box>
+          {chat.map((msg, index) => (
+            <HStack
+              key={index}
+              justify={
+                msg.sender._id === currentUserId ? "flex-end" : "flex-start"
+              }
+              mb={2}
+            >
+              <Box
+                bg={msg.sender._id === currentUserId ? "blue.400" : "gray.100"}
+                color={msg.sender._id === currentUserId ? "white" : "black"}
+                px={4}
+                py={2}
+                borderRadius="xl"
+                maxW="70%"
+                boxShadow="md"
+              >
+                <Text fontSize="sm">
+                  <strong>
+                    {msg.sender._id === currentUserId
+                      ? "You"
+                      : msg.sender.name || "Friend"}
+                  </strong>
+                  : {msg.message}
+                </Text>
+              </Box>
+            </HStack>
+          ))}
+        </Box>
+
+        <HStack>
+          <Input
+            placeholder="Type your message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            borderRadius="full"
+            bg={("white", "blackAlpha.100")}
+            _focus={{ bg: "white" }}
+          />
+          <Button
+            colorScheme="teal"
+            borderRadius="full"
+            px={6}
+            onClick={sendMessage}
+          >
+            Send
+          </Button>
+        </HStack>
+      </VStack>
+    </Box>
   );
 };
 

@@ -1,4 +1,4 @@
-import {Center } from "@chakra-ui/react"
+import { Center } from "@chakra-ui/react";
 import { LoginBox } from "../components/web/loginBox";
 import { useUser } from "../hooks/user";
 import { useNavigate } from "react-router-dom";
@@ -9,19 +9,17 @@ export const Login = () => {
   const navigate = useNavigate();
   useEffect(() => {
     checkUser();
-    
   }, []);
 
   useEffect(() => {
     if (user) {
-      navigate('/feed');
+      navigate("/feed");
     }
-  }, [user])
+  }, [user]);
 
   return (
-  <Center h="100vh" w="100vw">
-    <LoginBox />
-  </Center>
-  )
-}
-
+    <Center h="100vh" w="100vw">
+      <LoginBox />
+    </Center>
+  );
+};

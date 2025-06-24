@@ -4,7 +4,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-export const PostBox = ({ userId, content, createdAt, postId }) => {
+export const PostBox = ({
+  userId,
+  content,
+  createdAt,
+  postId,
+  onPostDeleted,
+}) => {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user.user);
   const [user, setUser] = useState(null);
@@ -35,26 +41,27 @@ export const PostBox = ({ userId, content, createdAt, postId }) => {
     }
   }, [userId]);
 
-  // const handleLikeToggle = () => {
-  //   setLiked((prev) => !prev);
-  // };
-
   const handleDelete = async () => {
     try {
       await axios.delete(
         `${import.meta.env.VITE_API_URL}/api/posts/delete-post/${postId}`
       );
       alert("Post deleted!");
-      window.location.reload();
+      if (onPostDeleted) {
+        onPostDeleted(postId);
+      }
     } catch (error) {
       console.error("Error deleting post:", error);
     }
   };
   const handleLikeToggle = async () => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_URL}/api/posts/like/${postId}`, {
-        userId: currentUser._id,
-      });
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/api/posts/like/${postId}`,
+        {
+          userId: currentUser._id,
+        }
+      );
       setLiked((prev) => !prev);
       setLikeCount(res.data.likes.length);
     } catch (err) {
@@ -107,7 +114,14 @@ export const PostBox = ({ userId, content, createdAt, postId }) => {
         </Card.Description>
       </Card.Body>
       <Card.Footer justifyContent="flex-end">
-        <Text fontSize="sm" color="gray.600" px={2} fontStyle="italic" gap={2} mr={2}>
+        <Text
+          fontSize="sm"
+          color="gray.600"
+          px={2}
+          fontStyle="italic"
+          gap={2}
+          mr={2}
+        >
           {likeCount}{" "}
           {likeCount === 1 ? "person likes this" : "people like this"}
         </Text>
@@ -118,13 +132,14 @@ export const PostBox = ({ userId, content, createdAt, postId }) => {
           onClick={handleLikeToggle}
           color={liked ? "red.400" : "gray.500"}
           gap={2}
-          >
+        >
           {liked ? "❤️ Liked" : "🤍 Like"}
         </Button>
 
         {currentUser?._id === userId && (
           <Button
             variant="ghost"
+            type="button"
             size="sm"
             colorScheme="red"
             onClick={handleDelete}

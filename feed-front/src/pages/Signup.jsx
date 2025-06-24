@@ -5,7 +5,6 @@ import axios from "axios";
 import { useUser } from "../hooks/user";
 import { useEffect } from "react";
 
-
 export const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +27,6 @@ export const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    // Simple validation (replace with real signup logic)
 
     if (!email || !password || !name) {
       setError("Please fill all fields.");
@@ -36,12 +34,15 @@ export const Signup = () => {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/signup` , {
-        email,
-        password,
-        name,
-        confirmPassword,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/signup`,
+        {
+          email,
+          password,
+          name,
+          confirmPassword,
+        }
+      );
       console.log(response);
       setLoading(false);
       navigate("/login");
@@ -51,10 +52,8 @@ export const Signup = () => {
       setLoading(false);
     }
     setError("");
-    // Simulate successful signup
   };
 
-  
   return (
     <Box
       maxW="md"
@@ -103,4 +102,4 @@ export const Signup = () => {
       </Button>
     </Box>
   );
-}
+};

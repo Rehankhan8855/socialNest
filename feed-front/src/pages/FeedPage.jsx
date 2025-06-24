@@ -95,6 +95,7 @@ export default function FeedPage() {
                       createdAt={post.createdAt}
                       key={post._id || `${post.userId}-${index}`}
                       onPostDeleted={handlePostDeleted}
+                      
                     />
                   )
               )

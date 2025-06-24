@@ -139,7 +139,6 @@ export const PostBox = ({
         {currentUser?._id === userId && (
           <Button
             variant="ghost"
-            type="button"
             size="sm"
             colorScheme="red"
             onClick={handleDelete}

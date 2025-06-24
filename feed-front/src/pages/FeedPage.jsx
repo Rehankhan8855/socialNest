@@ -22,6 +22,7 @@ export default function FeedPage() {
       );
       console.log(response.data);
       setPosts(response.data);
+
       setError(null);
     } catch (err) {
       console.error("Error fetching posts:", err);
@@ -50,7 +51,6 @@ export default function FeedPage() {
       return [newPost, ...prevPosts];
     });
   };
-  console.log("Rendering posts:", posts);
 
   const handlePostDeleted = (postId) => {
     setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));

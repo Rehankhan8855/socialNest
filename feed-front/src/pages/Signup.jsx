@@ -36,7 +36,7 @@ export const Signup = () => {
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${process.env.API_URL}/signup` , {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/signup` , {
         email,
         password,
         name,

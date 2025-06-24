@@ -44,7 +44,7 @@ export const NavBar = () => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const handleLogout = () => {
-    navigate("/login");
+    navigate("/");
     localStorage.removeItem("user");
     setShowDropdown(false);
   };

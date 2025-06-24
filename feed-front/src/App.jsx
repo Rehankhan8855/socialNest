@@ -7,7 +7,7 @@ import {
   defineConfig,
 } from "@chakra-ui/react";
 import {
-  BrowserRouter as Router,
+  BrowserRouter,
   Routes,
   Route,
   useNavigate,
@@ -21,7 +21,6 @@ import store from "./store";
 import { setUser } from "./store/userSlice";
 import ProfileBox from "./pages/Profile";
 import { Provider } from "./components/ui/provider";
-
 
 const config = defineConfig({
   theme: {
@@ -43,7 +42,7 @@ function App() {
   return (
     <Provider store={store}>
       <Theme appearance="light">
-        <Router>
+        <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomeNav />} />
             <Route path="/login" element={<Login />} />
@@ -51,7 +50,7 @@ function App() {
             <Route path="/feed" element={<FeedPage />} />
             <Route path="/profile/:id" element={<ProfileBox />} />
           </Routes>
-        </Router>
+        </BrowserRouter>
       </Theme>
     </Provider>
   );

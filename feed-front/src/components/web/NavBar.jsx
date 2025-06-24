@@ -19,7 +19,7 @@ import { useState } from "react";
 const Links = ["Dashboard", "Projects", "Team"];
 
 const NavLink = (props) => {
-  const { children } = props;
+  const { children, link } = props;
 
   return (
     <Box
@@ -30,7 +30,7 @@ const NavLink = (props) => {
       _hover={{
         textDecoration: "none",
       }}
-      href={"#"}
+      onClick={() => navigate(link)}
     >
       {children}
     </Box>
@@ -44,9 +44,10 @@ export const NavBar = () => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const handleLogout = () => {
-    navigate("/signup");
     localStorage.removeItem("user");
     setShowDropdown(false);
+    navigate("/login");
+
   };
 
   return (
